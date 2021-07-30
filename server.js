@@ -6,7 +6,11 @@ require("http")
   .createServer(function (req, res) {
     req
       .addListener("end", function () {
-        file.serve(req, res);
+        file.serve(req, res, function (e, res) {
+          if (e && e.status === 404) {
+            file.serveFile("/error.html", 404, {}, req, res);
+          }
+        });
       })
       .resume();
   })
